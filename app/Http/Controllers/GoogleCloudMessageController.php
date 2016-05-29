@@ -61,7 +61,7 @@ class GoogleCloudMessageController extends Controller
             $coutriesAll = array_flip(config('countries'));
             $install_country = array_map(function($install_country){
                 $coutriesAll = array_flip(config('countries'));
-                return array($install_country->country => $coutriesAll[strtoupper($install_country->country)]);
+                return array($install_country->country_code => $coutriesAll[strtoupper($install_country->country_code)]);
             }, $install_countries);
 
             $countries = array_filter($install_country, function($el) use ($search_text) {
@@ -82,7 +82,7 @@ class GoogleCloudMessageController extends Controller
 
         $reg_country = '';
         if (isset($input['countries_list']) && $input['countries_list'] != [])
-            $reg_country = 'where country IN ("' . implode($input['countries_list'], '","') . '")';
+            $reg_country = 'where country_code IN ("' . implode($input['countries_list'], '","') . '")';
 
         $reg_app = '';
         if (isset($input['app_list']) && $input['app_list'] != [])
