@@ -14,18 +14,13 @@ Route::group(['middleware' => ['web']], function () use ($router) {
     $router->post('/app/update_version/{app_id}', ['uses' => 'ApplicationController@updateVersion', 'as' => 'app.update_version']);
     $router->get('/gcm/message_histories/{message_id}', ['uses' => 'GoogleCloudMessageController@messageHistory', 'as' => 'gcm.message_histories']);
 });
-
 Route::group(['middleware' => 'web'], function () {
     Route::auth();
     Route::get('/', 'HomeController@index');
 });
-
+Route::post('/search', 'GoogleCloudMessageController@search');
 Route::post('/send_message', 'GoogleCloudMessageController@sendAll');
 Route::get('users/charts/', 'UserController@getUsersApi');
 Route::get('apps/charts/', 'UserController@getApplicationChart');
-Route::post('/search', 'GoogleCloudMessageController@search');
-Route::group(['middleware' => 'web'], function () {
-    Route::auth();
 
-    Route::get('/home', 'HomeController@index');
-});
+
