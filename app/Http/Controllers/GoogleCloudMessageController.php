@@ -57,7 +57,7 @@ class GoogleCloudMessageController extends Controller
 
         if ($input["country"] != "false")
         {
-            $install_countries = DB::select(DB::raw("SELECT country FROM install_histories group by country"));
+            $install_countries = DB::select(DB::raw("SELECT country_code FROM install_histories group by country_code"));
             $coutriesAll = array_flip(config('countries'));
             $install_country = array_map(function($install_country){
                 $coutriesAll = array_flip(config('countries'));
@@ -144,55 +144,6 @@ class GoogleCloudMessageController extends Controller
             </div>
         ";
     }
-
-    // public function create()
-    // {
-    //     return view('messages.create');
-    // }
-
-    // public function store(Request $request)
-    // {
-    //     $input = $request->all();
-
-    //     $this->validate($request, [
-    //         'title' => 'required',
-    //         'content' => 'required',
-    //         'icon' => 'required',
-    //         'package_name' => 'required',
-    //     ]);
-
-    //     Message::create($input);
-
-    //     Session::flash('flash_message', 'Message successfully added!');
-    //     return redirect()->back();
-    // }
-
-    // public function edit($id)
-    // {
-    //     $message = Message::findOrFail($id);
-
-    //     return view('messages.edit')->withMessage($message);
-    // }
-
-    // public function update($id, Request $request)
-    // {
-    //     $message = Message::findOrFail($id);
-
-    //     $this->validate($request, [
-    //         'title' => 'required',
-    //         'content' => 'required',
-    //         'icon' => 'required',
-    //         'package_name' => 'required',
-    //     ]);
-
-    //     $input = $request->all();
-
-    //     $message->fill($input)->save();
-
-    //     Session::flash('flash_message', 'Message successfully edited!');
-
-    //     return redirect()->back();
-    // }
 
     public function sendAll(Request $request)
     {
