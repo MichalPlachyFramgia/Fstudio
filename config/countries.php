@@ -1,8 +1,7 @@
 <?php
 
 return [
-    "NULL" => "unknow",
-    "NULL" => null,
+    "Unknow" => "unknow",
     "All" => "ALL",
     "Afghanistan"=>"AF",
     "Åland Islands"=>"AX",

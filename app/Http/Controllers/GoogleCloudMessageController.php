@@ -57,7 +57,7 @@ class GoogleCloudMessageController extends Controller
 
         if ($input["country"] != "false")
         {
-            $install_countries = DB::select(DB::raw("SELECT country_code FROM install_histories group by country_code"));
+            $install_countries = DB::select(DB::raw("SELECT country_code FROM install_histories where country_code is not null group by country_code"));
             $coutriesAll = array_flip(config('countries'));
             $install_country = array_map(function($install_country){
                 $coutriesAll = array_flip(config('countries'));
