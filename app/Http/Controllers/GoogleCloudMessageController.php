@@ -54,7 +54,7 @@ class GoogleCloudMessageController extends Controller
 
             $html .= $applicationsBoxs;
         }
-
+		
         if ($input["country"] != "false")
         {
             $install_countries = DB::select(DB::raw("SELECT country_code FROM install_histories where country_code is not null group by country_code"));
@@ -79,7 +79,7 @@ class GoogleCloudMessageController extends Controller
 
             $html .= $countriesBoxs;
         }
-
+		
         $reg_country = '';
         if (isset($input['countries_list']) && $input['countries_list'] != [])
             $reg_country = 'where country_code IN ("' . implode($input['countries_list'], '","') . '")';
@@ -87,18 +87,24 @@ class GoogleCloudMessageController extends Controller
         $reg_app = '';
         if (isset($input['app_list']) && $input['app_list'] != [])
             $reg_app = 'applications_id IN ("' . implode($input['app_list'], '","') . '")';
+		
+		$reg_ids_count = 0;
+		try{
+			if ($reg_country != '' && $reg_app != ''){
+				$reg_ids = DB::select(DB::raw("SELECT count(*) as c from (SELECT devices_id from install_histories ".$reg_country." AND ".$reg_app." group by devices_id) as a"));
+			}
+			else{
+				if ($reg_app != '')
+					$reg_app = " where ". $reg_app;
+				
+				$reg_ids = DB::select(DB::raw("SELECT count(*) as c from (SELECT devices_id from install_histories ".$reg_country.$reg_app." group by devices_id) as a"));
+			}
+			$reg_ids_count = $reg_ids[0]->c;
+		}catch (\Exception $e) {
+			var_dump($e);die();
+		}
 
-        if ($reg_country != '' && $reg_app != ''){
-            $reg_ids = DB::select(DB::raw("SELECT count(*) as c from devices where id in (SELECT devices_id from install_histories ".$reg_country." AND ".$reg_app.")"));
-        }
-        else{
-            if ($reg_app != '')
-                $reg_app = " where ". $reg_app;
-            $reg_ids = DB::select(DB::raw("SELECT count(*) as c from devices where id in (SELECT devices_id from install_histories ".$reg_country.$reg_app.")"));
-        }
-
-
-        return json_encode(array($html,$reg_ids[0]->c));
+        return json_encode(array($html,$reg_ids_count));
     }
 
     public function drawCountryBox($code, $name){
@@ -139,7 +145,7 @@ class GoogleCloudMessageController extends Controller
                 }
             });
             </script>
-            <div><img src='$link' style='width:90px;height:90px;'/></div>
+            <div><img src='application_icon/$link' style='width:90px;height:90px;'/></div>
             <div>$name</div>
             </div>
         ";
